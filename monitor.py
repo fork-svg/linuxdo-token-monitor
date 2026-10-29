@@ -39,10 +39,17 @@ def fetch_latest_posts(page: int = 0) -> Dict:
     try:
         print(f"  Fetching: {url}", file=sys.stderr)
         with urllib.request.urlopen(req, timeout=15) as response:
+            print(f"  Status: {response.status}", file=sys.stderr)
+            print(f"  Headers: {dict(response.headers)}", file=sys.stderr)
             data = response.read().decode('utf-8')
-            return json.loads(data)
+            print(f"  Response length: {len(data)} bytes", file=sys.stderr)
+            result = json.loads(data)
+            print(f"  Keys in response: {list(result.keys())}", file=sys.stderr)
+            return result
     except Exception as e:
-        print(f"Error fetching latest posts: {e}", file=sys.stderr)
+        print(f"  Error: {type(e).__name__}: {e}", file=sys.stderr)
+        import traceback
+        traceback.print_exc(file=sys.stderr)
         return {}
 
 
